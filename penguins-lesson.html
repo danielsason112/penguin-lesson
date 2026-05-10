@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐧 מורה צעיר – פינגווינים</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700;900&display=swap');
+
+        :root {
+            --ice-dark: #0a1628;
+            --ice-blue: #1a3a5c;
+            --accent: #00d4ff;
+            --warm: #ff6b9d;
+            --snow: #e8f4fd;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background: var(--ice-dark);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        /* Snowfall */
+        .snowfall {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 0;
+        }
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            opacity: 0.6;
+            animation: fall var(--dur) linear infinite;
+            font-size: var(--size);
+        }
+        @keyframes fall {
+            0%   { transform: translateY(-5vh) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0.2; }
+        }
+
+        /* Aurora background */
+        .aurora {
+            position: fixed; top: 0; left: 0; width: 100%; height: 40%;
+            background: linear-gradient(
+                180deg,
+                rgba(0,212,255,0.08) 0%,
+                rgba(0,255,136,0.05) 40%,
+                transparent 100%
+            );
+            pointer-events: none; z-index: 0;
+            animation: auroraShift 8s ease-in-out infinite alternate;
+        }
+        @keyframes auroraShift {
+            0%   { opacity: 0.5; filter: hue-rotate(0deg); }
+            100% { opacity: 1; filter: hue-rotate(30deg); }
+        }
+
+        /* Slide container */
+        .slides-wrapper {
+            position: relative;
+            width: 100vw; height: 100vh;
+            z-index: 1;
+        }
+        .slide {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 2rem;
+            opacity: 0; transform: scale(0.92);
+            transition: opacity 0.6s, transform 0.6s;
+            pointer-events: none;
+        }
+        .slide.active {
+            opacity: 1; transform: scale(1);
+            pointer-events: auto;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            display: flex; justify-content: center; align-items: center; gap: 1rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            z-index: 10;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.25);
+            color: #fff;
+            font-family: 'Rubik'; font-size: 1.2rem; font-weight: 700;
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+        .nav-btn:disabled { opacity: 0.3; cursor: default; background: transparent; color: #fff; border-color: rgba(255,255,255,0.15); }
+
+        .slide-counter {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .dots {
+            position: fixed; bottom: 4.5rem; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; z-index: 10;
+        }
+        .dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer; transition: all 0.3s;
+        }
+        .dot.active { background: var(--accent); transform: scale(1.3); }
+
+        /* ===== TITLE SLIDE ===== */
+        .title-slide .penguin-hero {
+            font-size: 6rem;
+            animation: waddle 1.5s ease-in-out infinite;
+        }
+        @keyframes waddle {
+            0%, 100% { transform: rotate(-8deg); }
+            50%      { transform: rotate(8deg); }
+        }
+        .title-slide h1 {
+            font-size: clamp(2.2rem, 5.5vw, 4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d4ff, #00ff88, #00d4ff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            text-align: center;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .title-slide .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.6rem);
+            color: rgba(255,255,255,0.6);
+            margin-top: 0.5rem;
+        }
+        .start-btn {
+            margin-top: 2rem;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            border: none; color: #000;
+            font-family: 'Rubik'; font-size: 1.3rem; font-weight: 700;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.5); }
+            50%      { box-shadow: 0 0 30px 10px rgba(0,212,255,0.2); }
+        }
+
+        /* ===== INFO CARD ===== */
+        .info-card {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 1rem;
+            max-width: 620px; text-align: center;
+        }
+        .info-card .card-emoji {
+            font-size: 5.5rem;
+            filter: drop-shadow(0 0 15px rgba(0,212,255,0.3));
+            animation: gentleBounce 3s ease-in-out infinite;
+        }
+        .info-card .card-img {
+            width: 180px; height: 180px;
+            border-radius: 20px;
+            object-fit: cover;
+            animation: gentleBounce 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(0,212,255,0.3));
+            border: 3px solid rgba(0,212,255,0.2);
+        }
+        .species-card .sp-img {
+            width: 80px; height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .info-card h2 {
+            font-size: 2.2rem; font-weight: 900;
+            color: var(--accent);
+        }
+        .info-card .fact-box {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.85);
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.15);
+            border-radius: 20px;
+            padding: 1.2rem 2rem;
+            line-height: 1.9;
+        }
+        .info-card .tag {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 700; font-size: 1rem;
+        }
+        .slide-label {
+            position: absolute;
+            top: 1.5rem; left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.35);
+        }
+
+        /* ===== SPECIES GRID ===== */
+        .species-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            max-width: 700px; width: 100%;
+        }
+        .species-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .species-card:hover {
+            border-color: var(--accent);
+            background: rgba(0,212,255,0.1);
+            transform: translateY(-4px);
+        }
+        .species-card .sp-emoji { font-size: 2.5rem; }
+        .species-card .sp-name { font-size: 0.9rem; font-weight: 700; margin-top: 0.3rem; color: var(--accent); }
+        .species-card .sp-fact { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.3rem; }
+        .species-detail {
+            margin-top: 1rem;
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.15);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            text-align: center;
+            min-height: 3rem;
+            color: rgba(255,255,255,0.8);
+            max-width: 500px;
+            transition: all 0.3s;
+        }
+
+        /* ===== TRUE/FALSE GAME ===== */
+        .tf-slide h2 {
+            font-size: 2rem; color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+        .tf-statement {
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 1rem 0;
+            max-width: 500px;
+            line-height: 1.7;
+        }
+        .tf-buttons {
+            display: flex; gap: 1.5rem;
+        }
+        .tf-btn {
+            font-family: 'Rubik'; font-size: 1.4rem; font-weight: 700;
+            padding: 1rem 2.5rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        .tf-btn:hover { transform: scale(1.05); }
+        .tf-btn.btn-true:hover { border-color: #4caf50; background: rgba(76,175,80,0.15); }
+        .tf-btn.btn-false:hover { border-color: #f44336; background: rgba(244,67,54,0.15); }
+        .tf-btn.correct-answer { border-color: #4caf50 !important; background: rgba(76,175,80,0.3) !important; animation: correctPop 0.5s ease; }
+        .tf-btn.wrong-answer { border-color: #f44336 !important; background: rgba(244,67,54,0.2) !important; animation: shake 0.5s ease; }
+        @keyframes correctPop { 0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)} }
+        @keyframes shake { 0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)} }
+        .tf-feedback {
+            margin-top: 1rem;
+            font-size: 1.3rem;
+            min-height: 2rem;
+        }
+        .tf-progress {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 0.5rem;
+        }
+        .tf-next-btn {
+            margin-top: 0.8rem;
+            background: var(--accent); border: none; color: #000;
+            font-family: 'Rubik'; font-size: 1rem; font-weight: 700;
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* ===== MATCHING GAME ===== */
+        .match-slide h2 {
+            font-size: 1.8rem; color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        .match-container {
+            display: flex; gap: 2rem;
+            align-items: flex-start;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 700px;
+        }
+        .match-column {
+            display: flex; flex-direction: column; gap: 0.6rem;
+        }
+        .match-item {
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            padding: 0.7rem 1.2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-width: 140px;
+        }
+        .match-item:hover { border-color: var(--accent); background: rgba(0,212,255,0.1); }
+        .match-item.selected { border-color: var(--accent); background: rgba(0,212,255,0.15); box-shadow: 0 0 12px rgba(0,212,255,0.2); }
+        .match-item.matched { border-color: #4caf50; background: rgba(76,175,80,0.2); opacity: 0.7; pointer-events: none; }
+        .match-item.wrong-match { border-color: #f44336; background: rgba(244,67,54,0.2); animation: shake 0.5s ease; }
+        .match-feedback {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            min-height: 1.5rem;
+        }
+
+        /* ===== PENGUIN BUILDER ===== */
+        .builder-slide h2 {
+            font-size: 1.8rem; color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        .builder-area {
+            display: flex; gap: 2rem; align-items: center;
+            flex-wrap: wrap; justify-content: center;
+        }
+        .penguin-canvas {
+            width: 200px; height: 280px;
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(255,255,255,0.15);
+            border-radius: 24px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            position: relative;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.3);
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        .penguin-canvas.building {
+            border-color: var(--accent);
+            background: rgba(0,212,255,0.05);
+        }
+        .penguin-part {
+            position: absolute;
+            font-size: 2.5rem;
+            transition: all 0.5s ease;
+            opacity: 0; transform: scale(0);
+        }
+        .penguin-part.placed {
+            opacity: 1; transform: scale(1);
+        }
+        .parts-panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+        }
+        .part-btn {
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            padding: 0.6rem 1rem;
+            font-family: 'Rubik'; font-size: 0.9rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .part-btn:hover { border-color: var(--accent); background: rgba(0,212,255,0.1); }
+        .part-btn.used { opacity: 0.3; pointer-events: none; border-color: #4caf50; }
+        .builder-info {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            min-height: 1.5rem;
+            max-width: 400px;
+        }
+
+        /* ===== SOUND SLIDE ===== */
+        .sound-slide h2 {
+            font-size: 1.8rem; color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        .sound-btns {
+            display: flex; gap: 1rem; flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .sound-btn {
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 1.2rem 2rem;
+            font-family: 'Rubik'; font-size: 1.1rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 0.4rem;
+        }
+        .sound-btn:hover { border-color: var(--accent); background: rgba(0,212,255,0.1); transform: scale(1.05); }
+        .sound-btn .s-emoji { font-size: 2.5rem; }
+        .sound-btn.playing {
+            border-color: var(--warm);
+            background: rgba(255,107,157,0.15);
+            animation: soundPulse 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes soundPulse {
+            from { transform: scale(1); }
+            to   { transform: scale(1.06); }
+        }
+        .speech-bubble {
+            margin-top: 1.5rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            position: relative;
+            min-height: 3rem;
+            max-width: 400px;
+            text-align: center;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            top: -10px; left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-bottom-color: rgba(255,255,255,0.08);
+        }
+        /* ===== END SLIDE ===== */
+        .end-slide .trophy { font-size: 5rem; margin-bottom: 1rem; }
+        .end-slide h1 {
+            font-size: 2.8rem; font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        .end-slide p { font-size: 1.2rem; color: rgba(255,255,255,0.6); }
+        .confetti-container {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 100;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px; height: 10px;
+            animation: confettiFall var(--fall-dur) linear forwards;
+        }
+        @keyframes confettiFall {
+            0%   { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .info-card .card-emoji { font-size: 4rem; }
+            .info-card .card-img { width: 130px; height: 130px; }
+            .info-card h2 { font-size: 1.6rem; }
+            .info-card .fact-box { font-size: 1rem; padding: 0.8rem 1.2rem; }
+            .species-grid { grid-template-columns: repeat(2, 1fr); }
+            .species-card .sp-img { width: 60px; height: 60px; }
+            .match-container { flex-direction: column; align-items: center; }
+            .builder-area { flex-direction: column; }
+            .tf-buttons { flex-direction: row; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="aurora"></div>
+<div class="snowfall" id="snowfall"></div>
+
+<div class="slides-wrapper" id="slidesWrapper">
+
+    <!-- Slide 0: Title -->
+    <div class="slide title-slide active" data-index="0">
+        <div class="penguin-hero">🐧</div>
+        <h1>מוֹרֶה צָעִיר: פִּינְגְוִינִים</h1>
+        <div class="subtitle">הַכִּירוּ אֶת הַצִּפּוֹרִים הֲכִי מְגַנִּיבוֹת בָּעוֹלָם! ❄️</div>
+        <button class="start-btn" onclick="goToSlide(1)">בּוֹאוּ נִצְלוֹל לַמַּיִם! 🌊</button>
+    </div>
+
+    <!-- Slide 1: What is a penguin? -->
+    <div class="slide" data-index="1">
+        <div class="info-card">
+            <img class="card-img" src="images/penguin-chinstrap.jpg" alt="פינגווין" onerror="this.outerHTML='<div class=card-emoji>🐧</div>'">
+            <h2>מָה זֶה פִּינְגְוִין?</h2>
+            <span class="tag" style="background:var(--accent); color:#000;">🐦 צִפּוֹר מְיֻחֶדֶת!</span>
+            <div class="fact-box">
+                פִּינְגְוִין הוּא <strong>צִפּוֹר שֶׁלֹּא יְכוֹלָה לָעוּף</strong>! 🚫✈️<br>
+                אֲבָל הוּא <strong>שַׂחְיָן מְעֻלֶּה</strong> – שׁוֹחֶה מַהֵר מְאוֹד בַּמַּיִם! 🏊<br>
+                הוּא הוֹלֵךְ בְּצוּרָה מַצְחִיקָה – <strong>מִתְנַדְנֵד מִצַּד לְצַד</strong>! 🚶
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Where do they live? -->
+    <div class="slide" data-index="2">
+        <div class="info-card">
+            <img class="card-img" src="images/penguins-group.jpg" alt="פינגווינים באנטארקטיקה" onerror="this.outerHTML='<div class=card-emoji>🧊</div>'">
+            <h2>אֵיפֹה גָּרִים פִּינְגְוִינִים?</h2>
+            <span class="tag" style="background:#88ccff; color:#000;">🌍 חֲצִי הַכַּדּוּר הַדְּרוֹמִי</span>
+            <div class="fact-box">
+                רֹב הַפִּינְגְוִינִים גָּרִים <strong>בְּאַנְטַארְקְטִיקָה</strong> – הַקֹּטֶב הַדְּרוֹמִי! 🥶<br>
+                שָׁם <strong>קַר מְאוֹד מְאוֹד</strong> – עַד מִינוּס 60 מַעֲלוֹת!<br>
+                יֵשׁ פִּינְגְוִינִים גַּם בִּדְרוֹם אַפְרִיקָה 🇿🇦, נְיוּ זִילַנְד 🇳🇿<br> וַאֲפִילוּ לְיַד קַו הַמַּשְׁוֶה בַּגָּלָפָּגוֹס! 🏝️
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Body -->
+    <div class="slide" data-index="3">
+        <div class="info-card">
+            <img class="card-img" src="images/penguin-emperor.jpg" alt="גוף פינגווין" onerror="this.outerHTML='<div class=card-emoji>🖤🤍</div>'">
+            <h2>הַגּוּף שֶׁל הַפִּינְגְוִין</h2>
+            <span class="tag" style="background:#333; color:#fff;">⚫⚪ שָׁחוֹר וְלָבָן</span>
+            <div class="fact-box">
+                <strong>גַּב שָׁחוֹר</strong> – כְּדֵי לְהִתְחַבֵּא מִטּוֹרְפִים שֶׁמִּסְתַּכְּלִים מִלְמַעְלָה 🦅<br>
+                <strong>בֶּטֶן לְבָנָה</strong> – כְּדֵי לְהִתְחַבֵּא מִטּוֹרְפִים שֶׁמַּבִּיטִים מִלְּמַטָּה 🦈<br>
+                זֶה נִקְרָא <strong>"הַסְוָאַת נֶגֶד"</strong>! 🎭<br>
+                יֵשׁ לָהֶם שִׁכְבַת <strong>שֻׁמָּן עָבָה</strong> וְ<strong>נוֹצוֹת צְפוּפוֹת</strong> נֶגֶד הַקֹּר! 🧥
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Food -->
+    <div class="slide" data-index="4">
+        <div class="info-card">
+            <img class="card-img" src="images/penguin-swimming.jpg" alt="פינגווין צולל" onerror="this.outerHTML='<div class=card-emoji>🐟</div>'">
+            <h2>מָה פִּינְגְוִינִים אוֹכְלִים?</h2>
+            <span class="tag" style="background:#ff9800; color:#000;">🍽️ תַּפְרִיט יַמִּי</span>
+            <div class="fact-box">
+                פִּינְגְוִינִים אוֹכְלִים <strong>דָּגִים</strong> 🐟 <strong>דְּיוֹנוּנִים</strong> 🦑 וְ<strong>קְרִיל</strong> (שְׁרִימְפְּס קְטַנִּים) 🦐<br>
+                הֵם <strong>צוֹלְלִים לַמַּיִם</strong> כְּדֵי לָצוּד אֹכֶל!<br>
+                פִּינְגְוִין קֵיסָרִי יָכוֹל לִצְלוֹל לְ<strong>עֹמֶק שֶׁל 500 מֶטֶר</strong>! 😱<br>
+                הֵם שׁוֹתִים <strong>מֵי יָם</strong> וּמְסַנְּנִים אֶת הַמֶּלַח! 🧂
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Babies -->
+    <div class="slide" data-index="5">
+        <div class="info-card">
+            <img class="card-img" src="images/penguin-baby.jpg" alt="אפרוח פינגווין" onerror="this.outerHTML='<div class=card-emoji>🥚</div>'">
+            <h2>תִּינוֹקוֹת פִּינְגְוִין</h2>
+            <span class="tag" style="background:var(--warm); color:#000;">👶 כָּאֵלֶּה חֲמוּדִים!</span>
+            <div class="fact-box">
+                הָאִמָּא מַטִּילָה <strong>בֵּיצָה</strong> וְהָאַבָּא שׁוֹמֵר עָלֶיהָ! 🥚<br>
+                הָאַבָּא מַחֲזִיק אֶת הַבֵּיצָה <strong>עַל הָרַגְלַיִם</strong> כְּדֵי לְחַמֵּם אוֹתָהּ! 🦶<br>
+                הָאֶפְרוֹחַ בּוֹקֵעַ אַחֲרֵי כְּ<strong>חוֹדְשַׁיִם</strong> 🐣<br>
+                הָאֶפְרוֹחִים <strong>פְּלָאפִיִּים וַאֲפוֹרִים</strong> וּמְאוֹד חֲמוּדִים! 🤗
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Fun facts -->
+    <div class="slide" data-index="6">
+        <div class="info-card">
+            <div class="card-emoji">🤩</div>
+            <h2>עוּבְדוֹת מַדְהִימוֹת!</h2>
+            <span class="tag" style="background:var(--accent); color:#000;">💡 הֲיְדַעְתֶּם?</span>
+            <div class="fact-box">
+                🏃 פִּינְגְוִינִים יְכוֹלִים <strong>לְהַחְלִיק עַל הַבֶּטֶן</strong> עַל הַקֶּרַח!<br>
+                🤝 הֵם חַיִּים <strong>בִּקְבוּצוֹת עֲנָקִיּוֹת</strong> – אַלְפֵי פִּינְגְוִינִים בְּיַחַד!<br>
+                💕 פִּינְגְוִינִים <strong>נֶאֱמָנִים לְבֶן/בַּת הַזּוּג</strong> שֶׁלָּהֶם!<br>
+                🗣️ כָּל פִּינְגְוִין מְזַהֶה אֶת בֶּן הַזּוּג שֶׁלּוֹ <strong>לְפִי הַקּוֹל</strong>!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Species -->
+    <div class="slide" data-index="7">
+        <div class="slide-label">סוגי פינגווינים</div>
+        <h2 style="font-size:1.8rem; color:var(--accent); margin-bottom:0.5rem;">🐧 סוּגִים שֶׁל פִּינְגְוִינִים</h2>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-bottom:1rem;">יֵשׁ 18 סוּגִים! הִנֵּה כַּמָּה מֵהֶם – לִחְצוּ לִלְמוֹד עוֹד 👆</p>
+        <div class="species-grid" id="speciesGrid">
+            <div class="species-card" onclick="showSpecies(0)">
+                <img class="sp-img" src="images/penguin-emperor.jpg" alt="קיסרי" onerror="this.outerHTML='<div class=sp-emoji>👑</div>'">
+                <div class="sp-name">קֵיסָרִי</div>
+                <div class="sp-fact">הֲכִי גָּדוֹל!</div>
+            </div>
+            <div class="species-card" onclick="showSpecies(1)">
+                <img class="sp-img" src="images/penguin-baby.jpg" alt="מלכותי" onerror="this.outerHTML='<div class=sp-emoji>🧡</div>'">
+                <div class="sp-name">מַלְכוּתִי</div>
+                <div class="sp-fact">צִבְעוֹנִי וְיָפֶה</div>
+            </div>
+            <div class="species-card" onclick="showSpecies(2)">
+                <img class="sp-img" src="images/penguin-gentoo.jpg" alt="זנב מכחול" onerror="this.outerHTML='<div class=sp-emoji>💙</div>'">
+                <div class="sp-name">זנב מכחול</div>
+                <div class="sp-fact">הֲכִי קָטָן!</div>
+            </div>
+            <div class="species-card" onclick="showSpecies(3)">
+                <img class="sp-img" src="images/penguin-rockhopper.jpg" alt="סלעי" onerror="this.outerHTML='<div class=sp-emoji>🎸</div>'">
+                <div class="sp-name">סַלְעִי</div>
+                <div class="sp-fact">שֵׂעָר פַּאנְק!</div>
+            </div>
+            <div class="species-card" onclick="showSpecies(4)">
+                <img class="sp-img" src="images/penguins-group.jpg" alt="ז'נטו" onerror="this.outerHTML='<div class=sp-emoji>🎩</div>'">
+                <div class="sp-name">ז'ֶנְטוּ</div>
+                <div class="sp-fact">הֲכִי מָהִיר!</div>
+            </div>
+            <div class="species-card" onclick="showSpecies(5)">
+                <img class="sp-img" src="images/penguin-chinstrap.jpg" alt="סנטרה" onerror="this.outerHTML='<div class=sp-emoji>🖤</div>'">
+                <div class="sp-name">סַנְטְרָה</div>
+                <div class="sp-fact">פַּס עַל הַסַּנְטֵר</div>
+            </div>
+        </div>
+        <div class="species-detail" id="speciesDetail">👆 לִחְצוּ עַל סוּג כְּדֵי לִלְמוֹד עָלָיו!</div>
+    </div>
+
+    <!-- Slide 8: Penguin Sounds -->
+    <div class="slide sound-slide" data-index="8">
+        <h2>🔊 אֵיךְ פִּינְגְוִינִים מְדַבְּרִים?</h2>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-bottom:0.5rem;">לִחְצוּ כְּדֵי לְגַלּוֹת אֶת הַקּוֹלוֹת שֶׁלָּהֶם!</p>
+        <div class="sound-btns">
+            <button class="sound-btn" onclick="playSound(this, 'gentoo')">
+                <span class="s-emoji">🐧</span>
+                <span>פִּינְגְוִין ז'ֶנְטוּ</span>
+            </button>
+            <button class="sound-btn" onclick="playSound(this, 'antarctic')">
+                <span class="s-emoji">🧊</span>
+                <span>פִּינְגְוִינֵי אַנְטַארְקְטִיקָה</span>
+            </button>
+            <button class="sound-btn" onclick="playSound(this, 'kingFlock')">
+                <span class="s-emoji">👑</span>
+                <span>לְהָקַת מַלְכוּתִיִּים</span>
+            </button>
+            <button class="sound-btn" onclick="playSound(this, 'natureFlock')">
+                <span class="s-emoji">🌿</span>
+                <span>לְהָקָה בַּטֶּבַע</span>
+            </button>
+            <button class="sound-btn" onclick="playSound(this, 'scream')">
+                <span class="s-emoji">📢</span>
+                <span>צְעָקָה</span>
+            </button>
+            <button class="sound-btn" onclick="playSound(this, 'growl')">
+                <span class="s-emoji">🗣️</span>
+                <span>נְהִימָה</span>
+            </button>
+        </div>
+        <div class="speech-bubble" id="speechBubble">🐧 לִחְצוּ עַל כַּפְתּוֹר כְּדֵי לִשְׁמוֹעַ!</div>
+    </div>
+
+    <!-- Slide 9: True/False -->
+    <div class="slide tf-slide" data-index="9">
+        <h2>✅❌ נָכוֹן אוֹ לֹא נָכוֹן?</h2>
+        <div class="tf-statement" id="tfStatement"></div>
+        <div class="tf-buttons">
+            <button class="tf-btn btn-true" id="btnTrue" onclick="checkTF(true)">✅ נָכוֹן!</button>
+            <button class="tf-btn btn-false" id="btnFalse" onclick="checkTF(false)">❌ לֹא נָכוֹן!</button>
+        </div>
+        <div class="tf-feedback" id="tfFeedback"></div>
+        <div class="tf-progress" id="tfProgress"></div>
+        <button class="tf-next-btn" id="tfNextBtn" onclick="nextTF()">הבא ➡️</button>
+    </div>
+
+    <!-- Slide 10: Matching game -->
+    <div class="slide match-slide" data-index="10">
+        <h2>🧩 הַתְאִימוּ!</h2>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem; margin-bottom:1rem;">בַּחֲרוּ פְּרִיט מִכָּל צַד כְּדֵי לְחַבֵּר בֵּינֵיהֶם</p>
+        <div class="match-container" id="matchContainer"></div>
+        <div class="match-feedback" id="matchFeedback"></div>
+        <button class="reset-btn" onclick="initMatch()" style="margin-top:0.5rem; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-family:'Rubik'; padding:0.5rem 1.5rem; border-radius:50px; cursor:pointer;">🔄 הַתְחֵל מֵחָדָשׁ</button>
+    </div>
+
+    <!-- Slide 11: Build a penguin -->
+    <div class="slide builder-slide" data-index="11">
+        <h2>🔨 בְּנוּ פִּינְגְוִין!</h2>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem; margin-bottom:0.5rem;">לִחְצוּ עַל הַחֲלָקִים כְּדֵי לְהַרְכִּיב פִּינְגְוִין</p>
+        <div class="builder-area">
+            <div class="penguin-canvas" id="penguinCanvas">
+                <span>לִחְצוּ עַל חֲלָקִים ←</span>
+                <div class="penguin-part" id="part-body" style="top:35%; font-size:5rem;">⬛</div>
+                <div class="penguin-part" id="part-belly" style="top:42%; font-size:3rem;">⬜</div>
+                <div class="penguin-part" id="part-head" style="top:12%; font-size:3.5rem;">🖤</div>
+                <div class="penguin-part" id="part-eyes" style="top:18%; font-size:1.8rem;">👀</div>
+                <div class="penguin-part" id="part-beak" style="top:28%; font-size:1.5rem;">🔶</div>
+                <div class="penguin-part" id="part-feet" style="top:78%; font-size:2rem;">🦶🦶</div>
+            </div>
+            <div class="parts-panel" id="partsPanel">
+                <button class="part-btn" onclick="placePart('body', this)">⬛ גּוּף</button>
+                <button class="part-btn" onclick="placePart('belly', this)">⬜ בֶּטֶן לְבָנָה</button>
+                <button class="part-btn" onclick="placePart('head', this)">🖤 רֹאשׁ</button>
+                <button class="part-btn" onclick="placePart('eyes', this)">👀 עֵינַיִם</button>
+                <button class="part-btn" onclick="placePart('beak', this)">🔶 מַקּוֹר</button>
+                <button class="part-btn" onclick="placePart('feet', this)">🦶 רַגְלַיִם</button>
+            </div>
+        </div>
+        <div class="builder-info" id="builderInfo"></div>
+    </div>
+
+    <!-- Slide 12: End -->
+    <div class="slide end-slide" data-index="12">
+        <div class="trophy">🐧🏆</div>
+        <h1>כָּל הַכָּבוֹד!</h1>
+        <p>עַכְשָׁו אַתֶּם מֻמְחִים לְפִינְגְוִינִים! ❄️🌟</p>
+        <p style="margin-top:0.8rem; font-size:0.95rem; color:rgba(255,255,255,0.4);">🎓 תְּעוּדַת חוֹקֵר פִּינְגְוִינִים צָעִיר</p>
+        <button class="start-btn" style="margin-top:1.5rem; font-size:1.1rem;" onclick="goToSlide(0)">🔄 שׁוּב מֵהַהַתְחָלָה</button>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="dots" id="dots"></div>
+<div class="nav-bar">
+    <button class="nav-btn" id="nextBtn" onclick="nextSlide()">הבא ⬅️</button>
+    <span class="slide-counter" id="slideCounter"></span>
+    <button class="nav-btn" id="prevBtn" onclick="prevSlide()">➡️ הקודם</button>
+</div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== SNOWFALL =====
+(function createSnow() {
+    const c = document.getElementById('snowfall');
+    const flakes = ['❄', '❅', '❆', '•'];
+    for (let i = 0; i < 50; i++) {
+        const s = document.createElement('div');
+        s.className = 'snowflake';
+        s.textContent = flakes[Math.floor(Math.random()*flakes.length)];
+        s.style.cssText = `
+            left:${Math.random()*100}%;
+            --dur:${Math.random()*6+4}s;
+            --size:${Math.random()*1+0.5}rem;
+            animation-delay:${Math.random()*8}s;
+            opacity:${Math.random()*0.4+0.2};
+        `;
+        c.appendChild(s);
+    }
+})();
+
+// ===== SLIDES =====
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+
+function goToSlide(i) {
+    if (i < 0 || i >= totalSlides) return;
+    slides[currentSlide].classList.remove('active');
+    currentSlide = i;
+    slides[currentSlide].classList.add('active');
+    updateNav(); updateDots();
+    if (i === 9) initTF();
+    if (i === 10) initMatch();
+    if (i === 12) launchConfetti();
+}
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+function updateNav() {
+    document.getElementById('prevBtn').disabled = currentSlide === 0;
+    document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+    document.getElementById('slideCounter').textContent = `${currentSlide+1} / ${totalSlides}`;
+}
+
+(function createDots() {
+    const d = document.getElementById('dots');
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i===0?' active':'');
+        dot.onclick = () => goToSlide(i);
+        d.appendChild(dot);
+    }
+})();
+function updateDots() {
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===currentSlide));
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key==='ArrowLeft'||e.key==='ArrowDown') nextSlide();
+    else if (e.key==='ArrowRight'||e.key==='ArrowUp') prevSlide();
+});
+updateNav();
+
+// ===== SPECIES =====
+const speciesData = [
+    { name: "פִּינְגְוִין קֵיסָרִי", detail: "👑 הֲכִי גָּדוֹל מִכָּלָם! גָּבְהוֹ כִּמְעַט 1.2 מֶטֶר. הָאַבָּא שׁוֹמֵר עַל הַבֵּיצָה בַּחֹרֶף הַקָּפוּא 65 יָמִים בְּלִי אֹכֶל!" },
+    { name: "פִּינְגְוִין מַלְכוּתִי", detail: "🧡 יֵשׁ לוֹ כְּתָמִים כְּתֻמִּים יְפִים עַל הַצַּוָּאר. הַשֵּׁנִי בְּגָדְלוֹ. חַי בָּאִיִים לְיַד אַנְטַארְקְטִיקָה!" },
+    { name: "פִּינְגְוִין כָּחוֹל קָטָן", detail: "💙 הֲכִי קְטַנְטָן! גָּבְהוֹ רַק 30 ס\"מ – כְּמוֹ סַרְגֵל! חַי בְּאוֹסְטְרַלְיָה וְנְיוּ זִילַנְד." },
+    { name: "פִּינְגְוִין סַלְעִי", detail: "🎸 יֵשׁ לוֹ 'שֵׂעָר' צָהֹב מְטוֹרָף עַל הָרֹאשׁ – כְּמוֹ כּוֹכַב רוֹק! הוּא קוֹפֵץ בֵּין הַסְּלָעִים!" },
+    { name: "פִּינְגְוִין ז'ֶנְטוּ", detail: "🎩 הַשַּׂחְיָן הֲכִי מָהִיר! מַגִּיעַ לִמְהִירוּת שֶׁל 36 קמ\"שׁ בַּמַּיִם! יֵשׁ לוֹ פַּס לָבָן עַל הָרֹאשׁ." },
+    { name: "פִּינְגְוִין סַנְטְרָה", detail: "🖤 יֵשׁ לוֹ פַּס שָׁחוֹר דַּק מִתַּחַת לַסַּנְטֵר – כְּאִלּוּ הוּא חוֹבֵשׁ קַסְדָה! חַי בְּאַנְטַארְקְטִיקָה." },
+];
+function showSpecies(i) {
+    document.getElementById('speciesDetail').innerHTML = `<strong>${speciesData[i].name}</strong><br>${speciesData[i].detail}`;
+}
+
+// ===== SOUNDS =====
+const soundData = {
+    scream:      { file: 'audio/the-sound-where-the-penguin-screams.mp3', desc: '📢 צְעָקָה חֲזָקָה שֶׁל פִּינְגְוִין! כָּכָה הֵם מַזְהִירִים אוֹ קוֹרְאִים לְבֶן הַזּוּג.' },
+    growl:       { file: 'audio/penguin-growl.mp3', desc: '🗣️ נְהִימָה נָמוּכָה – פִּינְגְוִינִים מִשְׁתַּמְּשִׁים בָּזֶה כְּדֵי לְהַגֵּן עַל הַטֶּרִיטוֹרְיָה שֶׁלָּהֶם!' },
+    gentoo:      { file: 'audio/gentoo-penguin.mp3', desc: '🐧 הַקּוֹל שֶׁל פִּינְגְוִין ז\'ֶנְטוּ – הַשַּׂחְיָן הֲכִי מָהִיר בֵּין הַפִּינְגְוִינִים!' },
+    antarctic:   { file: 'audio/antarctic-penguins.mp3', desc: '🧊 קוֹלוֹת פִּינְגְוִינִים בְּאַנְטַארְקְטִיקָה – בַּקֹּר הַקִּיצוֹנִי שֶׁל הַקֹּטֶב הַדְּרוֹמִי!' },
+    kingFlock:   { file: 'audio/the-sound-of-a-flock-of-king-penguins.mp3', desc: '👑 לְהָקָה שֶׁל פִּינְגְוִינִים מַלְכוּתִיִּים – אֲלָפִים בְּיַחַד! כָּל אֶחָד מְזַהֶה אֶת בֶּן זוּגוֹ לְפִי הַקּוֹל!' },
+    natureFlock: { file: 'audio/the-sound-of-a-flock-of-penguins-in-nature.mp3', desc: '🌿 לְהָקַת פִּינְגְוִינִים בַּטֶּבַע – רַעַשׁ אַדִּיר כְּמוֹ אִצְטַדְיוֹן כַּדּוּרֶגֶל!' }
+};
+let currentAudio = null;
+function playSound(btn, type) {
+    document.querySelectorAll('.sound-btn').forEach(b => b.classList.remove('playing'));
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    const s = soundData[type];
+    if (!s) return;
+    document.getElementById('speechBubble').textContent = s.desc;
+    btn.classList.add('playing');
+    currentAudio = new Audio(s.file);
+    currentAudio.play();
+    currentAudio.addEventListener('ended', () => btn.classList.remove('playing'));
+    currentAudio.addEventListener('error', () => btn.classList.remove('playing'));
+}
+
+// ===== TRUE / FALSE =====
+const tfData = [
+    { statement: "פִּינְגְוִינִים יְכוֹלִים לָעוּף ✈️", answer: false, explain: "פִּינְגְוִינִים לֹא יְכוֹלִים לָעוּף, אֲבָל הֵם שַׂחְיָנִים מְעֻלִּים!" },
+    { statement: "פִּינְגְוִינִים חַיִּים רַק בַּקֹּטֶב הַצְּפוֹנִי ❄️", answer: false, explain: "פִּינְגְוִינִים חַיִּים בַּקֹּטֶב הַדְּרוֹמִי וּבִמְקוֹמוֹת נוֹסָפִים בַּחֲצִי הַכַּדּוּר הַדְּרוֹמִי!" },
+    { statement: "הַגַּב שֶׁל פִּינְגְוִין שָׁחוֹר וְהַבֶּטֶן לְבָנָה ⚫⚪", answer: true, explain: "נָכוֹן! זֶה עוֹזֵר לָהֶם לְהִתְחַבֵּא מִטּוֹרְפִים – זוֹ הַסְוָאַת נֶגֶד!" },
+    { statement: "פִּינְגְוִינִים אוֹכְלִים דָּגִים 🐟", answer: true, explain: "נָכוֹן! הֵם אוֹכְלִים דָּגִים, דְּיוֹנוּנִים וְקְרִיל!" },
+    { statement: "הָאַבָּא פִּינְגְוִין שׁוֹמֵר עַל הַבֵּיצָה 🥚", answer: true, explain: "נָכוֹן! אֵצֶל פִּינְגְוִין קֵיסָרִי הָאַבָּא מַחֲזִיק אֶת הַבֵּיצָה עַל הָרַגְלַיִם!" },
+    { statement: "פִּינְגְוִינִים חַיִּים לְבַד 🏠", answer: false, explain: "פִּינְגְוִינִים חַיִּים בִּקְבוּצוֹת עֲנָקִיּוֹת שֶׁל אֲלָפִים בְּיַחַד!" },
+    { statement: "פִּינְגְוִין כָּחוֹל קָטָן הוּא הֲכִי גָּדוֹל 📏", answer: false, explain: "הֵפֶךְ! הוּא הֲכִי קָטָן – רַק 30 ס\"מ! הַפִּינְגְוִין הַקֵּיסָרִי הוּא הֲכִי גָּדוֹל." },
+    { statement: "פִּינְגְוִינִים יְכוֹלִים לְהַחְלִיק עַל הַבֶּטֶן עַל הַקֶּרַח 🛷", answer: true, explain: "נָכוֹן! זֶה נִקְרָא 'טוֹבוֹגְנִינְג' – הֵם מַחְלִיקִים עַל הַבֶּטֶן כְּדֵי לָנוּעַ מַהֵר!" },
+];
+let tfIndex = 0, tfScore = 0, tfAnswered = false;
+
+function initTF() {
+    tfIndex = 0; tfScore = 0; tfAnswered = false;
+    showTF();
+}
+function showTF() {
+    tfAnswered = false;
+    const t = tfData[tfIndex];
+    document.getElementById('tfStatement').textContent = t.statement;
+    document.getElementById('tfFeedback').textContent = '';
+    document.getElementById('tfNextBtn').style.display = 'none';
+    document.getElementById('btnTrue').className = 'tf-btn btn-true';
+    document.getElementById('btnFalse').className = 'tf-btn btn-false';
+    document.getElementById('tfProgress').textContent = `שאלה ${tfIndex+1} מתוך ${tfData.length} | ניקוד: ${tfScore}`;
+}
+function checkTF(ans) {
+    if (tfAnswered) return;
+    tfAnswered = true;
+    const correct = tfData[tfIndex].answer;
+    if (ans === correct) {
+        tfScore++;
+        (ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('correct-answer');
+        document.getElementById('tfFeedback').textContent = '🎉 נכון! ' + tfData[tfIndex].explain;
+    } else {
+        (ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('wrong-answer');
+        (!ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('correct-answer');
+        document.getElementById('tfFeedback').textContent = '❌ ' + tfData[tfIndex].explain;
+    }
+    document.getElementById('tfProgress').textContent = `שאלה ${tfIndex+1} מתוך ${tfData.length} | ניקוד: ${tfScore}`;
+    document.getElementById('tfNextBtn').style.display = 'inline-block';
+    document.getElementById('tfNextBtn').textContent = tfIndex < tfData.length-1 ? 'הבא ➡️' : 'סיום 🏁';
+}
+function nextTF() {
+    tfIndex++;
+    if (tfIndex < tfData.length) showTF();
+    else {
+        document.getElementById('tfStatement').textContent = '🎉 סיימתם!';
+        document.getElementById('tfFeedback').textContent = `ענית נכון על ${tfScore} מתוך ${tfData.length}!`;
+        document.getElementById('tfNextBtn').style.display = 'none';
+        document.getElementById('btnTrue').style.display = 'none';
+        document.getElementById('btnFalse').style.display = 'none';
+        document.getElementById('tfProgress').textContent = tfScore === tfData.length ? '🌟 מושלם!' : '👏 כל הכבוד!';
+    }
+}
+
+// ===== MATCHING GAME =====
+const matchData = [
+    { left: "🐧 פִּינְגְוִין קֵיסָרִי", right: "👑 הֲכִי גָּדוֹל" },
+    { left: "🐟 אֹכֶל מֻעְדָּף", right: "🐟 דָּגִים וְקְרִיל" },
+    { left: "🥚 שׁוֹמֵר הַבֵּיצָה", right: "👨 הָאַבָּא!" },
+    { left: "🏠 אֵיפֹה גָּרִים?", right: "🧊 אַנְטַארְקְטִיקָה" },
+    { left: "🏊 כִּשָׁרוֹן מְיֻחָד", right: "💨 שְׂחִיִיָה מְהִירָה" },
+];
+let selectedLeft = null, selectedRight = null, matchCount = 0;
+
+function initMatch() {
+    matchCount = 0; selectedLeft = null; selectedRight = null;
+    document.getElementById('matchFeedback').textContent = '';
+    const container = document.getElementById('matchContainer');
+    const shuffledRight = [...matchData].sort(() => Math.random()-0.5);
+    container.innerHTML = `
+        <div class="match-column" id="matchLeft"></div>
+        <div style="font-size:2rem; color:rgba(255,255,255,0.2);">↔</div>
+        <div class="match-column" id="matchRight"></div>
+    `;
+    matchData.forEach((m,i) => {
+        const el = document.createElement('div');
+        el.className = 'match-item';
+        el.textContent = m.left;
+        el.dataset.index = i;
+        el.dataset.side = 'left';
+        el.onclick = () => selectMatch(el, 'left', i);
+        document.getElementById('matchLeft').appendChild(el);
+    });
+    shuffledRight.forEach((m) => {
+        const origIndex = matchData.findIndex(d => d.right === m.right);
+        const el = document.createElement('div');
+        el.className = 'match-item';
+        el.textContent = m.right;
+        el.dataset.index = origIndex;
+        el.dataset.side = 'right';
+        el.onclick = () => selectMatch(el, 'right', origIndex);
+        document.getElementById('matchRight').appendChild(el);
+    });
+}
+
+function selectMatch(el, side, index) {
+    if (el.classList.contains('matched')) return;
+    if (side === 'left') {
+        if (selectedLeft) selectedLeft.classList.remove('selected');
+        selectedLeft = el; el.classList.add('selected');
+    } else {
+        if (selectedRight) selectedRight.classList.remove('selected');
+        selectedRight = el; el.classList.add('selected');
+    }
+    if (selectedLeft && selectedRight) {
+        const li = parseInt(selectedLeft.dataset.index);
+        const ri = parseInt(selectedRight.dataset.index);
+        if (li === ri) {
+            selectedLeft.classList.remove('selected');
+            selectedRight.classList.remove('selected');
+            selectedLeft.classList.add('matched');
+            selectedRight.classList.add('matched');
+            matchCount++;
+            document.getElementById('matchFeedback').textContent = '✅ מצוין!';
+            if (matchCount === matchData.length) {
+                document.getElementById('matchFeedback').textContent = '🎉 התאמתם הכל! כל הכבוד!';
+            }
+        } else {
+            selectedLeft.classList.add('wrong-match');
+            selectedRight.classList.add('wrong-match');
+            document.getElementById('matchFeedback').textContent = '❌ לא מתאים, נסו שוב!';
+            setTimeout(() => {
+                selectedLeft.classList.remove('selected', 'wrong-match');
+                selectedRight.classList.remove('selected', 'wrong-match');
+                selectedLeft = null; selectedRight = null;
+            }, 700);
+            return;
+        }
+        selectedLeft = null; selectedRight = null;
+    }
+}
+
+// ===== PENGUIN BUILDER =====
+const partFacts = {
+    body: "⬛ הַגּוּף שֶׁל הַפִּינְגְוִין עֲגַלְגַל וְאֵירוֹדִינָמִי – מֻשְׁלָם לִשְׂחִיִיָה!",
+    belly: "⬜ הַבֶּטֶן הַלְּבָנָה עוֹזֶרֶת לְהַסְוָאָה מוֹל טוֹרְפִים שֶׁמַּבִּיטִים מִלְּמַטָּה!",
+    head: "🖤 הָרֹאשׁ הַשָּׁחוֹר עוֹזֵר לְהִתְחַבֵּא וּמֵגֵן מִפְּנֵי הַשֶּׁמֶשׁ!",
+    eyes: "👀 הָעֵינַיִם רוֹאוֹת מְצֻיָן מִתַּחַת לַמַּיִם כְּדֵי לָצוּד דָּגִים!",
+    beak: "🔶 הַמַּקּוֹר חַד וְחָזָק – מֻשְׁלָם לִתְפֹס דָּגִים חֲלַקְלַקִּים!",
+    feet: "🦶 הָרַגְלַיִם עוֹזְרוֹת לִשְׂחוֹת כְּמוֹ מִשְׁוֹטִים וְלְהַחְזִיק אֶת הַבֵּיצָה!"
+};
+let partsPlaced = 0;
+
+function placePart(partId, btn) {
+    const part = document.getElementById('part-' + partId);
+    if (part.classList.contains('placed')) return;
+    part.classList.add('placed');
+    btn.classList.add('used');
+    partsPlaced++;
+    document.getElementById('builderInfo').textContent = partFacts[partId];
+    document.getElementById('penguinCanvas').classList.add('building');
+    if (partsPlaced === 6) {
+        document.getElementById('builderInfo').textContent = '🎉 בניתם פינגווין שלם! יפה מאוד!';
+        document.getElementById('penguinCanvas').innerHTML = '<div style="font-size:8rem; animation: gentleBounce 2s ease-in-out infinite;">🐧</div>';
+    }
+}
+
+// ===== CONFETTI =====
+function launchConfetti() {
+    const c = document.getElementById('confettiContainer');
+    c.innerHTML = '';
+    const colors = ['#00d4ff','#00ff88','#ff6b9d','#ffd700','#7b68ee','#ff6b35'];
+    for (let i = 0; i < 80; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        const size = Math.random()*8+5;
+        p.style.cssText = `
+            width:${size}px; height:${size}px;
+            left:${Math.random()*100}%;
+            background:${colors[Math.floor(Math.random()*colors.length)]};
+            border-radius:${Math.random()>0.5?'50%':'2px'};
+            --fall-dur:${Math.random()*2+2}s;
+            animation-delay:${Math.random()*1.5}s;
+        `;
+        c.appendChild(p);
+    }
+    setTimeout(() => c.innerHTML = '', 5000);
+}
+
+// Touch swipe
+let touchX = 0;
+document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+    const d = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(d) > 50) { d > 0 ? nextSlide() : prevSlide(); }
+});
+</script>
+
+</body>
+</html>
