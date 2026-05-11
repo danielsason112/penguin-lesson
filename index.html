@@ -806,9 +806,9 @@ updateNav();
 
 // ===== SPECIES =====
 const speciesData = [
-    { name: "פִּינְגְוִין קֵיסָרִי", detail: "👑 הֲכִי גָּדוֹל מִכָּלָם! הוא כִּמְעַט בגובה שלי - מטר 20. הָאַבָּא שׁוֹמֵר עַל הַבֵּיצָה בַּחֹרֶף הַקָּפוּא 65 יָמִים בְּלִי אֹכֶל!" },
+    { name: "פִּינְגְוִין קֵיסָרִי", detail: "👑 הֲכִי גָּדוֹל מִכָּלָם! הוּא כִּמְעַט בְּגוֹבַהּ שֶׁלִּי - מֶטֶר 20. הָאַבָּא שׁוֹמֵר עַל הַבֵּיצָה בַּחֹרֶף הַקָּפוּא 65 יָמִים בְּלִי אֹכֶל!" },
     { name: "פִּינְגְוִין מַלְכוּתִי", detail: "🧡 יֵשׁ לוֹ כְּתָמִים כְּתֻמִּים יְפִים עַל הַצַּוָּאר. הַשֵּׁנִי בְּגָדְלוֹ. חַי בָּאִיִים לְיַד אַנְטַארְקְטִיקָה!" },
-    { name: "פִּינְגְוִין כָּחוֹל קָטָן", detail: "💙 הֲכִי קְטַנְטָן! גָּבְהוֹ רַק 30 סנטימטר – כְּמוֹ סַרְגֵל! חַי בְּאוֹסְטְרַלְיָה וְנְיוּ זִילַנְד." },
+    { name: "פִּינְגְוִין כָּחוֹל קָטָן", detail: "💙 הֲכִי קְטַנְטָן! גָּבְהוֹ רַק 30 סֶנְטִימֶטֶר – כְּמוֹ סַרְגֵל! חַי בְּאוֹסְטְרַלְיָה וְנְיוּ זִילַנְד." },
     { name: "פִּינְגְוִין סַלְעִי", detail: "🎸 יֵשׁ לוֹ 'שֵׂעָר' צָהֹב עַל הָרֹאשׁ – הוּא קוֹפֵץ בֵּין הַסְּלָעִים!" },
     { name: "פִּינְגְוִין ז'ֶנְטוּ", detail: "🎩 הַשַּׂחְיָן הֲכִי מָהִיר! יֵשׁ לוֹ פַּס לָבָן עַל הָרֹאשׁ." },
     { name: "פִּינְגְוִין סַנְטְרָה", detail: "🖤 יֵשׁ לוֹ פַּס שָׁחוֹר דַּק מִתַּחַת לַסַּנְטֵר – כְּאִלּוּ הוּא חוֹבֵשׁ קַסְדָה! חַי בְּאַנְטַארְקְטִיקָה." },
@@ -845,10 +845,10 @@ const tfData = [
     { statement: "פִּינְגְוִינִים יְכוֹלִים לָעוּף ✈️", answer: false, explain: "פִּינְגְוִינִים לֹא יְכוֹלִים לָעוּף, אֲבָל הֵם שַׂחְיָנִים מְעֻלִּים!" },
     { statement: "פִּינְגְוִינִים חַיִּים רַק בַּקֹּטֶב הַצְּפוֹנִי ❄️", answer: false, explain: "פִּינְגְוִינִים חַיִּים בַּקֹּטֶב הַדְּרוֹמִי וּבִמְקוֹמוֹת נוֹסָפִים בַּחֲצִי הַכַּדּוּר הַדְּרוֹמִי!" },
     { statement: "הַגַּב שֶׁל פִּינְגְוִין שָׁחוֹר וְהַבֶּטֶן לְבָנָה ⚫⚪", answer: true, explain: "נָכוֹן! זֶה עוֹזֵר לָהֶם לְהִתְחַבֵּא מִטּוֹרְפִים – זוֹ הַסְוָאַת נֶגֶד!" },
-    { statement: "פִּינְגְוִינִים אוֹכְלִים דָּגִים 🐟", answer: true, explain: "נָכוֹן! הֵם אוֹכְלִים דָּגִים ודְּיוֹנוּנִים!" },
+    { statement: "פִּינְגְוִינִים אוֹכְלִים דָּגִים 🐟", answer: true, explain: "נָכוֹן! הֵם אוֹכְלִים דָּגִים וּדְיוֹנוּנִים!" },
     { statement: "הָאַבָּא פִּינְגְוִין שׁוֹמֵר עַל הַבֵּיצָה 🥚", answer: true, explain: "נָכוֹן! אֵצֶל פִּינְגְוִין קֵיסָרִי הָאַבָּא מַחֲזִיק אֶת הַבֵּיצָה עַל הָרַגְלַיִם!" },
     { statement: "פִּינְגְוִינִים חַיִּים לְבַד 🏠", answer: false, explain: "פִּינְגְוִינִים חַיִּים בִּקְבוּצוֹת עֲנָקִיּוֹת שֶׁל אֲלָפִים בְּיַחַד!" },
-    { statement: "פִּינְגְוִין זנב מכחול הוּא הֲכִי גָּדוֹל 📏", answer: false, explain: "הֵפֶךְ! הוּא הֲכִי קָטָן – רַק 30 סנטימטר! הַפִּינְגְוִין הַקֵּיסָרִי הוּא הֲכִי גָּדוֹל." },
+    { statement: "פִּינְגְוִין זְנָב מִכְחוֹל הוּא הֲכִי גָּדוֹל 📏", answer: false, explain: "הֵפֶךְ! הוּא הֲכִי קָטָן – רַק 30 סֶנְטִימֶטֶר! הַפִּינְגְוִין הַקֵּיסָרִי הוּא הֲכִי גָּדוֹל." },
     { statement: "פִּינְגְוִינִים יְכוֹלִים לְהַחְלִיק עַל הַבֶּטֶן עַל הַקֶּרַח 🛷", answer: true, explain: "נָכוֹן! הֵם מַחְלִיקִים עַל הַבֶּטֶן כְּדֵי לָנוּעַ מַהֵר!" },
 ];
 let tfIndex = 0, tfScore = 0, tfAnswered = false;
@@ -865,7 +865,7 @@ function showTF() {
     document.getElementById('tfNextBtn').style.display = 'none';
     document.getElementById('btnTrue').className = 'tf-btn btn-true';
     document.getElementById('btnFalse').className = 'tf-btn btn-false';
-    document.getElementById('tfProgress').textContent = `שאלה ${tfIndex+1} מתוך ${tfData.length} | ניקוד: ${tfScore}`;
+    document.getElementById('tfProgress').textContent = `שְׁאֵלָה ${tfIndex+1} מִתּוֹךְ ${tfData.length} | נִקּוּד: ${tfScore}`;
 }
 function checkTF(ans) {
     if (tfAnswered) return;
@@ -874,26 +874,26 @@ function checkTF(ans) {
     if (ans === correct) {
         tfScore++;
         (ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('correct-answer');
-        document.getElementById('tfFeedback').textContent = '🎉 נכון! ' + tfData[tfIndex].explain;
+        document.getElementById('tfFeedback').textContent = '🎉 נָכוֹן! ' + tfData[tfIndex].explain;
     } else {
         (ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('wrong-answer');
         (!ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('correct-answer');
         document.getElementById('tfFeedback').textContent = '❌ ' + tfData[tfIndex].explain;
     }
-    document.getElementById('tfProgress').textContent = `שאלה ${tfIndex+1} מתוך ${tfData.length} | ניקוד: ${tfScore}`;
+    document.getElementById('tfProgress').textContent = `שְׁאֵלָה ${tfIndex+1} מִתּוֹךְ ${tfData.length} | נִקּוּד: ${tfScore}`;
     document.getElementById('tfNextBtn').style.display = 'inline-block';
-    document.getElementById('tfNextBtn').textContent = tfIndex < tfData.length-1 ? 'הבא ➡️' : 'סיום 🏁';
+    document.getElementById('tfNextBtn').textContent = tfIndex < tfData.length-1 ? 'הַבָּא ➡️' : 'סִיּוּם 🏁';
 }
 function nextTF() {
     tfIndex++;
     if (tfIndex < tfData.length) showTF();
     else {
-        document.getElementById('tfStatement').textContent = '🎉 סיימתם!';
-        document.getElementById('tfFeedback').textContent = `ענית נכון על ${tfScore} מתוך ${tfData.length}!`;
+        document.getElementById('tfStatement').textContent = '🎉 סִיַּמְתֶּם!';
+        document.getElementById('tfFeedback').textContent = `עָנִיתָ נָכוֹן עַל ${tfScore} מִתּוֹךְ ${tfData.length}!`;
         document.getElementById('tfNextBtn').style.display = 'none';
         document.getElementById('btnTrue').style.display = 'none';
         document.getElementById('btnFalse').style.display = 'none';
-        document.getElementById('tfProgress').textContent = tfScore === tfData.length ? '🌟 מושלם!' : '👏 כל הכבוד!';
+        document.getElementById('tfProgress').textContent = tfScore === tfData.length ? '🌟 מֻשְׁלָם!' : '👏 כָּל הַכָּבוֹד!';
     }
 }
 
@@ -956,14 +956,14 @@ function selectMatch(el, side, index) {
             selectedLeft.classList.add('matched');
             selectedRight.classList.add('matched');
             matchCount++;
-            document.getElementById('matchFeedback').textContent = '✅ מצוין!';
+            document.getElementById('matchFeedback').textContent = '✅ מְצֻיָּן!';
             if (matchCount === matchData.length) {
-                document.getElementById('matchFeedback').textContent = '🎉 התאמתם הכל! כל הכבוד!';
+                document.getElementById('matchFeedback').textContent = '🎉 הִתְאַמְתֶּם הַכֹּל! כָּל הַכָּבוֹד!';
             }
         } else {
             selectedLeft.classList.add('wrong-match');
             selectedRight.classList.add('wrong-match');
-            document.getElementById('matchFeedback').textContent = '❌ לא מתאים, נסו שוב!';
+            document.getElementById('matchFeedback').textContent = '❌ לֹא מַתְאִים, נַסּוּ שׁוּב!';
             setTimeout(() => {
                 selectedLeft.classList.remove('selected', 'wrong-match');
                 selectedRight.classList.remove('selected', 'wrong-match');
@@ -995,7 +995,7 @@ function placePart(partId, btn) {
     document.getElementById('builderInfo').textContent = partFacts[partId];
     document.getElementById('penguinCanvas').classList.add('building');
     if (partsPlaced === 6) {
-        document.getElementById('builderInfo').textContent = '🎉 בניתם פינגווין שלם! יפה מאוד!';
+        document.getElementById('builderInfo').textContent = '🎉 בְּנִיתֶם פִּינְגְוִין שָׁלֵם! יָפֶה מְאוֹד!';
         document.getElementById('penguinCanvas').innerHTML = '<div style="font-size:8rem; animation: gentleBounce 2s ease-in-out infinite;">🐧</div>';
     }
 }
