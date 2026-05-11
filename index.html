@@ -663,8 +663,8 @@
         <h2>✅❌ נָכוֹן אוֹ לֹא נָכוֹן?</h2>
         <div class="tf-statement" id="tfStatement"></div>
         <div class="tf-buttons">
-            <button class="tf-btn btn-true" id="btnTrue" onclick="checkTF(true)">✅</button>
-            <button class="tf-btn btn-false" id="btnFalse" onclick="checkTF(false)">❌</button>
+            <button class="tf-btn btn-true" id="btnTrue" onclick="checkTF(true)">✅ נָכוֹן</button>
+            <button class="tf-btn btn-false" id="btnFalse" onclick="checkTF(false)">❌ לֹא נָכוֹן</button>
         </div>
         <div class="tf-feedback" id="tfFeedback"></div>
         <div class="tf-progress" id="tfProgress"></div>
@@ -860,7 +860,7 @@ function checkTF(ans) {
     if (ans === correct) {
         tfScore++;
         (ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('correct-answer');
-        document.getElementById('tfFeedback').textContent = '🎉 נָכוֹן! ' + tfData[tfIndex].explain;
+        document.getElementById('tfFeedback').textContent = '🎉 ' + tfData[tfIndex].explain;
     } else {
         (ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('wrong-answer');
         (!ans ? document.getElementById('btnTrue') : document.getElementById('btnFalse')).classList.add('correct-answer');
