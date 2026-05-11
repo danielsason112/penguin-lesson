@@ -620,20 +620,10 @@
                 <div class="sp-name">זְנָב מִכְחוֹל</div>
                 <div class="sp-fact">הֲכִי קָטָן!</div>
             </div>
-            <div class="species-card" onclick="showSpecies(3)">
-                <img class="sp-img" src="images/penguin-rockhopper.jpg" alt="סַלְעִי" onerror="this.outerHTML='<div class=sp-emoji>🎸</div>'">
-                <div class="sp-name">סַלְעִי</div>
-                <div class="sp-fact">שֵׂעָר פַּאנְק!</div>
-            </div>
             <div class="species-card" onclick="showSpecies(4)">
                 <img class="sp-img" src="images/penguins-group.jpg" alt="ז'ֶנְטוּ" onerror="this.outerHTML='<div class=sp-emoji>🎩</div>'">
                 <div class="sp-name">ז'ֶנְטוּ</div>
                 <div class="sp-fact">הֲכִי מָהִיר!</div>
-            </div>
-            <div class="species-card" onclick="showSpecies(5)">
-                <img class="sp-img" src="images/penguin-chinstrap.jpg" alt="סַנְטְרָה" onerror="this.outerHTML='<div class=sp-emoji>🖤</div>'">
-                <div class="sp-name">סַנְטְרָה</div>
-                <div class="sp-fact">פַּס עַל הַסַּנְטֵר</div>
             </div>
         </div>
         <div class="species-detail" id="speciesDetail">👆 לִחְצוּ עַל סוּג כְּדֵי לִלְמוֹד עָלָיו!</div>
@@ -656,10 +646,6 @@
                 <span class="s-emoji">👑</span>
                 <span>לְהָקַת מַלְכוּתִיִּים</span>
             </button>
-            <button class="sound-btn" onclick="playSound(this, 'natureFlock')">
-                <span class="s-emoji">🌿</span>
-                <span>לְהָקָה בַּטֶּבַע</span>
-            </button>
             <button class="sound-btn" onclick="playSound(this, 'scream')">
                 <span class="s-emoji">📢</span>
                 <span>צְעָקָה</span>
@@ -677,8 +663,8 @@
         <h2>✅❌ נָכוֹן אוֹ לֹא נָכוֹן?</h2>
         <div class="tf-statement" id="tfStatement"></div>
         <div class="tf-buttons">
-            <button class="tf-btn btn-true" id="btnTrue" onclick="checkTF(true)">✅ נָכוֹן!</button>
-            <button class="tf-btn btn-false" id="btnFalse" onclick="checkTF(false)">❌ לֹא נָכוֹן!</button>
+            <button class="tf-btn btn-true" id="btnTrue" onclick="checkTF(true)">✅</button>
+            <button class="tf-btn btn-false" id="btnFalse" onclick="checkTF(false)">❌</button>
         </div>
         <div class="tf-feedback" id="tfFeedback"></div>
         <div class="tf-progress" id="tfProgress"></div>
@@ -844,7 +830,7 @@ function playSound(btn, type) {
 const tfData = [
     { statement: "פִּינְגְוִינִים יְכוֹלִים לָעוּף ✈️", answer: false, explain: "פִּינְגְוִינִים לֹא יְכוֹלִים לָעוּף, אֲבָל הֵם שַׂחְיָנִים מְעֻלִּים!" },
     { statement: "פִּינְגְוִינִים חַיִּים רַק בַּקֹּטֶב הַצְּפוֹנִי ❄️", answer: false, explain: "פִּינְגְוִינִים חַיִּים בַּקֹּטֶב הַדְּרוֹמִי וּבִמְקוֹמוֹת נוֹסָפִים בַּחֲצִי הַכַּדּוּר הַדְּרוֹמִי!" },
-    { statement: "הַגַּב שֶׁל פִּינְגְוִין שָׁחוֹר וְהַבֶּטֶן לְבָנָה ⚫⚪", answer: true, explain: "נָכוֹן! זֶה עוֹזֵר לָהֶם לְהִתְחַבֵּא מִטּוֹרְפִים – זוֹ הַסְוָאַת נֶגֶד!" },
+    { statement: "הַגַּב שֶׁל פִּינְגְוִין שָׁחוֹר וְהַבֶּטֶן לְבָנָה ⚫⚪", answer: true, explain: "נָכוֹן! זֶה עוֹזֵר לָהֶם לְהִתְחַבֵּא מִטּוֹרְפִים – זוֹ הַסְוָאַה!" },
     { statement: "פִּינְגְוִינִים אוֹכְלִים דָּגִים 🐟", answer: true, explain: "נָכוֹן! הֵם אוֹכְלִים דָּגִים וּדְיוֹנוּנִים!" },
     { statement: "הָאַבָּא פִּינְגְוִין שׁוֹמֵר עַל הַבֵּיצָה 🥚", answer: true, explain: "נָכוֹן! אֵצֶל פִּינְגְוִין קֵיסָרִי הָאַבָּא מַחֲזִיק אֶת הַבֵּיצָה עַל הָרַגְלַיִם!" },
     { statement: "פִּינְגְוִינִים חַיִּים לְבַד 🏠", answer: false, explain: "פִּינְגְוִינִים חַיִּים בִּקְבוּצוֹת עֲנָקִיּוֹת שֶׁל אֲלָפִים בְּיַחַד!" },
